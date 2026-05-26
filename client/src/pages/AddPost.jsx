@@ -1,4 +1,33 @@
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+
 function AddPost() {
+    const {access_token}= useContext(AuthContext)
+
+    const onSubmit = (email, password)=>{
+    fetch(`${api_url}/posts`, {
+      method: 'POST',
+      body: JSON.stringify({
+          // email,
+          // password,
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        "Authorization": `Bearer ${access_token}`
+      },
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        // pass your message
+
+      }
+        
+      
+      );
+
+
+  }
+
   return (
     <section className="max-w-2xl">
       <h1 className="text-3xl font-bold text-slate-950">Add Post</h1>

@@ -24,6 +24,7 @@ def add_users():
 
     db.session.add(new_user)
     db.session.commit()
+    
 
     return jsonify({"success": "User created successfully"}), 201
 
