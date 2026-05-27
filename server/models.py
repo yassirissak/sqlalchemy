@@ -22,6 +22,7 @@ class Comment(db.Model):
     message = db.Column(db.Text, nullable=False)
 
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
 
 

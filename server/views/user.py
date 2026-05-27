@@ -14,12 +14,12 @@ user_bp = Blueprint('user_bp', __name__)
 @user_bp.route("/users", methods=["POST"])
 def add_users():
     data = request.get_json()
-    
+
     new_user = User(
         username=data["username"],
         email=data["email"],
         password=generate_password_hash(data["password"])
-      
+
     )
 
     db.session.add(new_user)
@@ -80,5 +80,3 @@ def delete_user(id):
     db.session.commit()
 
     return jsonify({"success": "User deleted successfully"}), 200
-
-

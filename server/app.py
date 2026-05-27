@@ -46,4 +46,3 @@ def check_if_token_revoked(jwt_header, jwt_payload: dict) -> bool:
 
 # export FLASK_APP=app.py
 # export FLASK_DEBUG=1
-

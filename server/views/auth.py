@@ -32,7 +32,7 @@ def login_user():
 @auth_bp.route("/refresh", methods=["POST"])
 @jwt_required(refresh=True)
 def refresh():
-    # get user id from the refresh token 
+    # get user id from the refresh token
     current_user_id = get_jwt_identity()
 
     # token - short-lived
@@ -51,7 +51,7 @@ def loggedin_user():
 
     if not user:
         return jsonify({"error": "user doesn't exist"}), 404
-    
+
     user_data = {
         "id":user.id,
         "email": user.email,

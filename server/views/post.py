@@ -13,7 +13,7 @@ post_bp = Blueprint('post_bp', __name__)
 def fetch_posts():
     # fetching data in sqlalchemy
     posts = Post.query.all()
-    
+
     results = []
 
     for post in posts:
@@ -34,7 +34,7 @@ def add_post():
     current_user_id = get_jwt_identity()
     if not current_user_id:
         return jsonify({"error": "Unauthorized as user do not exist"}), 404
-    
+
     new_post = Post(
         title=data["title"],
         content=data["content"],
@@ -54,7 +54,7 @@ def fetch_post(post_id):
     post = Post.query.get(post_id)
     if not post:
         return jsonify({"error": "Post does not exists"}), 404
-    
+
     my_post = {
         "id": post.id,
         "title": post.title,
@@ -75,11 +75,11 @@ def update_post(id):
 
     if post.user_id != int(current_user_id):
         return jsonify({"error": "Not authorized to update this post"}), 401
-    
+
     # if post doesn't exists give an error
     if not post:
         return jsonify({"error": "Post does not exists"}), 404
-    
+
     data = request.get_json()
 
     post.title = data.get("title", post.title)
@@ -108,6 +108,5 @@ def delete_post(id):
     db.session.commit()
 
     return jsonify({"success": "Post deleted successfully"}), 200
-
 
 
