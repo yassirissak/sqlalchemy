@@ -2,6 +2,7 @@ from datetime import datetime
 from datetime import timezone
 from flask import Blueprint,request, jsonify
 from app import  db
+from flask_mail import Message
 from models import User, TokenBlocklist
 from werkzeug.security import check_password_hash
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity, get_jwt
@@ -23,6 +24,15 @@ def login_user():
         # create access token
         access_token = create_access_token(identity=str(user.id) )
         refresh_token = create_refresh_token(identity=str(user.id) )
+
+        # msg = Message(
+        # subject="noreply@example.com",
+        # recipients=[email],
+        # body="Some logged in to your application"
+        #  )
+
+        # mail.send(msg)
+
         return jsonify({"access_token": access_token, "refresh_token":refresh_token}), 200
     else:
         return jsonify({"error": "Wrong credentials"}), 401
@@ -69,4 +79,4 @@ def logout():
     now = datetime.now(timezone.utc)
     db.session.add(TokenBlocklist(jti=jti, created_at=now))
     db.session.commit()
-    return jsonify(msg="JWT revoked")
+    return jsonify({"success": "JWT revoked"}), 200

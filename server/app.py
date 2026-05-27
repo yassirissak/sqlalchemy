@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-
+from flask_mail import Mail
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
@@ -13,8 +13,19 @@ migrate = Migrate(app, db)
 from flask_jwt_extended import JWTManager
 app.config["JWT_SECRET_KEY"] = "fyujvkyxbhvfjnxfgdbvkx,jvxhjbkjmhv"  # Change this!
 jwt = JWTManager(app)
-# the time for token to expire
 
+
+# the time for token to expired - jwt
+
+# app.config["MAIL_SERVER"] = "smtp.gmail.com"
+# app.config["MAIL_PORT"] = 587
+# app.config["MAIL_USE_TLS"] = True
+# app.config["MAIL_USE_SSL"] = False
+
+# app.config["MAIL_USERNAME"] = "kk@gmail.com"
+# app.config["MAIL_PASSWORD"] = "ydsd dfgd dfdf dfdf"
+
+# mail = Mail(app)
 
 CORS(app)
 app.secret_key = "sehtrsdyhndtejdydunuyehbdrvteryhe"

@@ -7,22 +7,27 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 post_bp = Blueprint('post_bp', __name__)
 
+
+def post_to_dict(post):
+    return {
+        "id": post.id,
+        "title": post.title,
+        "content": post.content,
+        "user": {
+            "id": post.user.id,
+            "email": post.user.email,
+            "username": post.user.username
+        } if post.user else None
+    }
+
+
 # READ
 @post_bp.route("/posts")
 @jwt_required()
 def fetch_posts():
     # fetching data in sqlalchemy
     posts = Post.query.all()
-
-    results = []
-
-    for post in posts:
-        results.append({
-            "id":post.id,
-            "title": post.title,
-            "content": post.content
-            }
-        )
+    results = [post_to_dict(post) for post in posts]
     return jsonify(results), 200
 
 # ADD
@@ -38,7 +43,7 @@ def add_post():
     new_post = Post(
         title=data["title"],
         content=data["content"],
-        user_id=current_user_id
+        user_id=int(current_user_id)
     )
 
     db.session.add(new_post)
@@ -55,30 +60,23 @@ def fetch_post(post_id):
     if not post:
         return jsonify({"error": "Post does not exists"}), 404
 
-    my_post = {
-        "id": post.id,
-        "title": post.title,
-        "content": post.content
-    }
-    return jsonify(my_post), 200
+    return jsonify(post_to_dict(post)), 200
 
 
-# -0---UPDATE
+# -0--UPDATE
 @post_bp.route("/posts/<int:id>", methods=["PUT"])
 @jwt_required()
 def update_post(id):
-    current_user_id = get_jwt_identity()
+    current_user_id = int(get_jwt_identity())
     # fetch the post
     post = Post.query.get(id)
-    print("post user id ", type(post.user_id) )
-    print("current  user id ", type( current_user_id) )
-
-    if post.user_id != int(current_user_id):
-        return jsonify({"error": "Not authorized to update this post"}), 401
 
     # if post doesn't exists give an error
     if not post:
         return jsonify({"error": "Post does not exists"}), 404
+
+    if post.user_id != current_user_id:
+        return jsonify({"error": "Not authorized to update this post"}), 401
 
     data = request.get_json()
 
@@ -94,19 +92,18 @@ def update_post(id):
 @post_bp.route("/posts/<int:id>", methods=["DELETE"])
 @jwt_required()
 def delete_post(id):
-    current_user_id = get_jwt_identity()
+    current_user_id = int(get_jwt_identity())
     # fetch the post
     post = Post.query.get(id)
 
-    if post.user_id != current_user_id:
-        return jsonify({"error": "Not authorized to update this post"}), 401
     # if post doesn't exists give an error
     if not post:
         return jsonify({"error": "The post you want to delete does not exists"}), 404
+
+    if post.user_id != current_user_id:
+        return jsonify({"error": "Not authorized to delete this post"}), 401
 
     db.session.delete(post)
     db.session.commit()
 
     return jsonify({"success": "Post deleted successfully"}), 200
-
-

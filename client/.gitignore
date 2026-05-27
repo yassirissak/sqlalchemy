@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# React/Vite build output
+dist/
+build/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Python generated files
+__pycache__/
+*.py[cod]
+
+# Local database files
+instance/
+*.db
+*.sqlite
+*.sqlite3
